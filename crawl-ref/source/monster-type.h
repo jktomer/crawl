@@ -192,6 +192,7 @@ enum monster_type                      // env.mons[].type
     MONS_MINER_BEE,
     MONS_JOROGUMO,
     MONS_BROODMOTHER,
+    MONS_CULICIVORA,
 #endif
     MONS_HARPY,
 #if TAG_MAJOR_VERSION == 34
@@ -1165,6 +1166,7 @@ enum monster_type                      // env.mons[].type
     MONS_MINER_BEE,
     MONS_JOROGUMO,
     MONS_BROODMOTHER,
+    MONS_CULICIVORA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

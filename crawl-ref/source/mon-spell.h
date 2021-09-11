@@ -584,6 +584,12 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_SPIDERS, 30, MON_SPELL_NATURAL },
       }
     },
+    
+    {  MST_CULICIVORA,
+      {
+       { SPELL_HEAL_OTHER, 40, MON_SPELL_NATURAL },
+      }
+    },
 
     // ('t') Testudines.
     {  MST_ALLIGATOR,

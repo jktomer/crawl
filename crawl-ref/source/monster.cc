@@ -6338,6 +6338,14 @@ bool monster::is_web_immune() const
             || mons_genus(type) == MONS_MOTH
             || mons_genus(type) == MONS_DEMONIC_CRAWLER
             || is_insubstantial()
+            || type == MONS_EMPEROR_SCORPION
+            || type == MONS_SPARK_WASP
+            || type == MONS_STEELBARB_WORM
+            || type == MONS_TORPOR_SNAIL
+            || type == MONS_RADROACH
+            || type == MONS_BOULDER_BEETLE
+            || type == MONS_JOROGUMO
+            || mons_genus(type) == MONS_KILLER_BEE
             || mons_genus(type) == MONS_JELLY;
 }
 

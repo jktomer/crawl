@@ -2449,8 +2449,8 @@ A large slimy worm, adept at traversing swamps and marshes.
 %%%%
 tarantella
 
-A small but greatly-feared spider whose frenzied dance causes great confusion
-in its victims.
+A small but greatly-feared spider whose enchanted bite causes victims to break
+into a frenzied dance.
 %%%%
 tainted leviathan
 

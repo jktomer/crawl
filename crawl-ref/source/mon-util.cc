@@ -2144,7 +2144,6 @@ string mon_attack_name(attack_type attack, bool with_object)
         "splash",
 #endif
         "pounce on",
-        "dance upon",
 #if TAG_MAJOR_VERSION == 34
         "sting",
 #endif

@@ -4582,12 +4582,14 @@ static int _mons_mesmerise(monster* mons, bool actual)
 static bool _maybe_irradiate(monster *mons)
 {
     if (mons->wont_attack() && adjacent(you.pos(), mons->pos()))
+    {
         return false;
-    
+
     int val = 0;
+    }
     int adjacent = 0;
     int hd = mons->spell_hd(SPELL_IRRADIATE);
-    
+
     for (adjacent_iterator ai(mons->pos()); ai; ++ai)
     {
         if (actor * act = actor_at(*ai))
@@ -4601,11 +4603,11 @@ static bool _maybe_irradiate(monster *mons)
                 val += act->get_hit_dice();
         }
     }
-    
+
     // randomize slightly
     val += random2(3*adjacent + 1) - random2(3*adjacent + 1);
 
-    return (val > 0);
+    return val > 0;
 }
 
 // Check whether targets might be scared.
@@ -5866,7 +5868,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_MONSTROUS_MENAGERIE:
         cast_monstrous_menagerie(mons, splpow, mons->god);
         return;
-        
+
     case SPELL_SUMMON_SPIDERS:
         summon_spiders(*mons, splpow, mons->god);
         return;
@@ -6054,7 +6056,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SHATTER:
         mons_shatter(mons);
         return;
-        
+
     case SPELL_IRRADIATE:
         cast_irradiate(splpow, mons, false);
         return;
@@ -7694,7 +7696,7 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
     case SPELL_FREEZE:
         ASSERT(foe);
         return ai_action::good_or_impossible(adjacent(mon->pos(), foe->pos()));
-        
+
     case SPELL_IRRADIATE:
         ASSERT(foe);
         return ai_action::good_or_bad(_maybe_irradiate(mon));

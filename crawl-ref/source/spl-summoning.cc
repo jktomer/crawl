@@ -3085,17 +3085,17 @@ spret foxfire_swarm()
 
 bool summon_a_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow)
-{                                   
+{
     monster_type mon = random_choose_weighted(150, MONS_REDBACK,
                                               100, MONS_JUMPING_SPIDER,
                                                75, MONS_TARANTELLA,
                                                50, MONS_ORB_SPIDER,
                                                pow / 2, MONS_WOLF_SPIDER);
-    
+
     monster *mons = create_monster(
             mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
                       .set_summoned(&agent, 3, spell, god));
-    if(mons)
+    if (mons)
         return true;
 
     return false;
@@ -3107,17 +3107,15 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
         return spret::abort;
 
     fail_check();
-    
+
     int created = 0;
-    
+
     for (int i = 0; i < 1 + div_rand_round(random2(pow), 80); i++)
     {
-        if(summon_a_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
-        {
+        if (summon_a_spider(agent, agent.pos(), god, SPELL_SUMMON_SPIDERS, pow))
             created++;
-        }
     }
-    
+
     if (created && you.see_cell(agent.pos()))
     {
         mprf("%s summon%s %s",
@@ -3127,6 +3125,6 @@ spret summon_spiders(actor &agent, int pow, god_type god, bool fail)
     }
     else if (agent.is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
-    
+
     return spret::success;
 }

@@ -578,13 +578,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IOOD, 80, MON_SPELL_MAGICAL },
       }
     },
-    
+
     {  MST_BROODMOTHER,
       {
        { SPELL_SUMMON_SPIDERS, 30, MON_SPELL_NATURAL },
       }
     },
-    
+
     {  MST_CULICIVORA,
       {
        { SPELL_HEAL_OTHER, 40, MON_SPELL_NATURAL },
@@ -676,7 +676,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BERSERK_OTHER, 66, MON_SPELL_NATURAL },
       }
     },
-    
+
     {  MST_SUN_MOTH,
       {
        { SPELL_STICKY_FLAME_RANGE, 20, MON_SPELL_NATURAL },
@@ -742,7 +742,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_BLINK_AWAY, 20, MON_SPELL_NATURAL},
       }
     },
-    
+
     {  MST_RADROACH,
       {
        { SPELL_IRRADIATE, 50, MON_SPELL_NATURAL},
@@ -950,7 +950,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MINOR_HEALING, 22, MON_SPELL_WIZARD },
       }
     },
-    
+
     // ('H') Hybrids.
     {  MST_JOROGUMO,
       {

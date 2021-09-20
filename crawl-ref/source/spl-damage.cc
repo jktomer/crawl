@@ -1820,9 +1820,11 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
 {
     actor *act = actor_at(where);
     if (!act || !act->alive())
+    {
         return 0;
-    
+
     bool player = act->is_player();
+    }
 
     const dice_def dam_dice = irradiate_damage(pow);
     const int base_dam = dam_dice.roll();
@@ -1844,7 +1846,7 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
     if (act->alive())
     {
         // be nice and "only" contaminate the player a lot
-        if(player)
+        if (player)
             contaminate_player(2000 + random2(1000));
         else
             act->malmutate("");

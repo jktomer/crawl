@@ -1820,11 +1820,9 @@ static int _irradiate_cell(coord_def where, int pow, actor *agent)
 {
     actor *act = actor_at(where);
     if (!act || !act->alive())
-    {
         return 0;
 
     bool player = act->is_player();
-    }
 
     const dice_def dam_dice = irradiate_damage(pow);
     const int base_dam = dam_dice.roll();

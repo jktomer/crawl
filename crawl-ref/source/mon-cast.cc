@@ -4582,11 +4582,9 @@ static int _mons_mesmerise(monster* mons, bool actual)
 static bool _maybe_irradiate(monster *mons)
 {
     if (mons->wont_attack() && adjacent(you.pos(), mons->pos()))
-    {
         return false;
 
     int val = 0;
-    }
     int adjacent = 0;
     int hd = mons->spell_hd(SPELL_IRRADIATE);
 

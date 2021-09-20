@@ -2980,13 +2980,11 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_SPIDER:
     {
         if (!one_chance_in(3))
-        {
             break;
 
         if (summon_a_spider(*attacker, defender->pos(),
                             attacker->as_monster()->god, SPELL_NO_SPELL,
                             attacker->get_hit_dice() * 12))
-        }
         {
             mpr("A spider bursts forth from the wound!");
         }

@@ -4596,7 +4596,7 @@ static bool _maybe_irradiate(monster *mons)
             if (act->is_player())
                 val += hd;
             else if (mons->temp_attitude() == act->as_monster()->temp_attitude())
-                val -= act->get_hit_dice();
+                val -= 2 * act->get_hit_dice(); // hesitate to kill allies
             else
                 val += act->get_hit_dice();
         }

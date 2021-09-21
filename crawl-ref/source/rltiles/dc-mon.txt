@@ -508,7 +508,9 @@ spellforged_servitor MONS_SPELLFORGED_SERVITOR
 gargoyle MONS_GARGOYLE
 war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+%rim 0
 nargun MONS_NARGUN
+%rim 1
 
 ## Weaponry ('(')
 spectral_sbl MONS_SPECTRAL_SBL
@@ -581,7 +583,6 @@ vault_sentinel MONS_VAULT_SENTINEL
 ironbound_convoker MONS_IRONBOUND_CONVOKER
 ironbound_preserver MONS_IRONBOUND_PRESERVER
 ironbound_frostheart MONS_IRONBOUND_FROSTHEART
-ironbound_beastmaster MONS_IRONBOUND_BEASTMASTER
 servant_of_whispers MONS_SERVANT_OF_WHISPERS
 ragged_hierophant MONS_RAGGED_HIEROPHANT
 imperial_myrmidon MONS_IMPERIAL_MYRMIDON
@@ -1208,7 +1209,9 @@ tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
-storm_form TRAN_STORM
+storm_form TRAN_STORM_HUMANOID
+storm_form_felid TRAN_STORM_FELID
+storm_form_octopode TRAN_STORM_OCTOPODE
 %rim 1
 
 %sdir misc

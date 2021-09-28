@@ -134,7 +134,6 @@ const vector<god_power> god_powers[NUM_GODS] =
 
     // Yredelemnul
     {   { 2, ABIL_YRED_RECALL_UNDEAD_SLAVES, "recall your undead slaves" },
-        { 2, ABIL_YRED_INJURY_MIRROR, "mirror injuries on your foes" },
         { 3, "Yredelemnul will now gift you servants as you gain piety.",
              "Yredelemnul will no longer gift you servants.",
              "Yredelemnul will gift you servants as you gain piety." },

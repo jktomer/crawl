@@ -744,6 +744,7 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
     case SK_POISON_MAGIC:
+    case SK_HEXES:
         return _give_wanderer_minor_spells(skill);
 
     case SK_EVOCATIONS:

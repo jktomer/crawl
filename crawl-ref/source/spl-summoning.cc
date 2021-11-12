@@ -3086,9 +3086,10 @@ spret foxfire_swarm()
 bool summon_a_spider(const actor &agent, coord_def pos, god_type god,
                         spell_type spell, int pow)
 {
-    monster_type mon = random_choose_weighted(150, MONS_REDBACK,
+    monster_type mon = random_choose_weighted(100, MONS_REDBACK,
                                               100, MONS_JUMPING_SPIDER,
                                                75, MONS_TARANTELLA,
+                                               50, MONS_CULICIVORA,
                                                50, MONS_ORB_SPIDER,
                                                pow / 2, MONS_WOLF_SPIDER);
 

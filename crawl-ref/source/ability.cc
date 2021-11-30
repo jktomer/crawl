@@ -106,6 +106,7 @@ enum class abflag
     berserk_ok          = 0x00002000, // can use even if berserk
     card                = 0x00004000, // deck drawing (Nemelex)
     quiet_fail          = 0x00008000, // no message on failure
+    souls               = 0x00010000, // ability costs reaped allies
 
     // TODO: these are currently unused, but targeted abilities should be
     // converted to use these along with the shared ability targeting code.
@@ -404,9 +405,9 @@ static vector<ability_def> &_get_ability_list()
         { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
             2, 0, 0, {fail_basis::invo, 50, 4, 20}, abflag::none },
         { ABIL_YRED_DRAIN_LIFE, "Drain Life",
-            6, 0, 2, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            6, 0, 0, {fail_basis::invo, 60, 4, 25}, abflag::souls },
         { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul",
-            8, 0, 4, {fail_basis::invo, 80, 4, 25}, abflag::none },
+            8, 0, 0, {fail_basis::invo, 80, 4, 25}, abflag::souls },
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
@@ -865,6 +866,9 @@ const string make_cost_description(ability_type ability)
         ret += nemelex_card_text(ability);
     }
 
+    if (abil.flags & abflag::souls)
+        ret += make_stringf(", %d Souls", abil.mp_cost / 2);
+
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
         return "None";
@@ -932,6 +936,13 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\nOne cursed item";
+    }
+
+    if (abil.flags & abflag::souls)
+    {
+        have_cost = true;
+        ret << "\nSouls  : ";
+        ret << abil.get_mp_cost() / 2;
     }
 
     if (!have_cost)
@@ -1500,6 +1511,14 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     {
         if (!quiet)
             mpr("That deck is empty!");
+        return false;
+    }
+
+    if (testbits(abil.flags, abflag::souls)
+        && !pay_yred_souls(abil.get_mp_cost() / 2, true))
+    {
+        if (!quiet)
+            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
         return false;
     }
 
@@ -2701,6 +2720,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     {
         int damage = 0;
         const int pow = you.skill_rdiv(SK_INVOCATIONS);
+        const int soul_cost = abil.get_mp_cost() / 2;
+
+        if (!pay_yred_souls(soul_cost, true))
+        {
+            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
+            return spret::abort;
+        }
 
         if (trace_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you) == spret::abort
             && !yesno("There are no drainable targets visible. Drain Life "
@@ -2710,10 +2736,10 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
             return spret::abort;
         }
 
-        const spret result = fire_los_attack_spell(SPELL_DRAIN_LIFE, pow,
-                                                   &you, fail, &damage);
-        if (result != spret::success)
-            return result;
+        fail_check();
+
+        pay_yred_souls(soul_cost);
+        fire_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you, false, &damage);
 
         if (damage > 0)
         {
@@ -2731,6 +2757,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
+        const int soul_cost = abil.get_mp_cost() / 2;
+
+        if (!pay_yred_souls(soul_cost, true))
+        {
+            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
+            return spret::abort;
+        }
 
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
@@ -2766,6 +2799,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         }
         fail_check();
 
+        pay_yred_souls(soul_cost);
         const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
         mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, &you,
                                    duration * BASELINE_DELAY));

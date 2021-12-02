@@ -109,8 +109,8 @@ enum class abflag
 
     // TODO: these are currently unused, but targeted abilities should be
     // converted to use these along with the shared ability targeting code.
-    dir_or_target       = 0x00010000, // use DIR_NONE targeting
-    target              = 0x00020000, // use DIR_TARGET targeting
+    dir_or_target       = 0x10000000, // use DIR_NONE targeting
+    target              = 0x20000000, // use DIR_TARGET targeting
     targeting_mask      = abflag::dir_or_target | abflag::target,
 };
 DEF_BITFIELD(ability_flags, abflag);

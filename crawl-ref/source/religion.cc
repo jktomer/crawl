@@ -1022,6 +1022,38 @@ bool yred_random_servant(unsigned int pow, bool force_hostile)
     return create_monster(mg);
 }
 
+static void _calculate_yred_piety()
+{
+    if (!you_worship(GOD_YREDELEMNUL))
+        return;
+
+    int soul_harvest = 0;
+
+    for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
+        if (is_yred_undead_slave(**mi) && !mi->is_summoned())
+            soul_harvest += 2 * mi->get_hit_dice() + 2;
+
+    set_piety(min(200, 15 + soul_harvest));
+}
+
+static void _give_one_yred_bonus_zombie()
+{
+    mgen_data mg(MONS_ZOMBIE, BEH_FRIENDLY, you.pos(), MHITYOU);
+    mg.set_summoned(&you, 0, 0, GOD_YREDELEMNUL);
+    create_monster(mg);
+}
+
+// Always place at least one zombie when called, so that
+// monks get a little extra at an ecumenical altar.
+void give_yred_bonus_zombies(int stars)
+{
+    do
+    {
+        _give_one_yred_bonus_zombie();
+        _calculate_yred_piety();
+    } while (you.piety < piety_breakpoint(stars - 1));
+}
+
 bool yred_reap_chance()
 {
     return coinflip() || (you.faith() && one_chance_in(3));
@@ -2406,20 +2438,6 @@ void god_speaks(god_type god, const char *mesg)
     env.mgrid(you.pos()) = orig_mon;
 }
 
-static void _calculate_yred_piety()
-{
-    if (!you_worship(GOD_YREDELEMNUL))
-        return;
-
-    int soul_harvest = 0;
-
-    for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
-        if (is_yred_undead_slave(**mi) && !mi->is_summoned())
-            soul_harvest += 2 * mi->get_hit_dice() + 2;
-
-    set_piety(min(200, 15 + soul_harvest));
-}
-
 void religion_turn_start()
 {
     if (you.turn_is_over)
@@ -3608,6 +3626,8 @@ static void _apply_monk_bonus()
     }
     else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
         gain_piety(15, 1, false); // of value with this god and looks weird.
+    else if (you_worship(GOD_YREDELEMNUL))
+        give_yred_bonus_zombies(2); // top up to **
     else
         gain_piety(35, 1, false);
 }

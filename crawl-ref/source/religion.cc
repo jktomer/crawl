@@ -962,7 +962,7 @@ static void _inc_gift_timeout(int val)
 }
 
 // These are sorted in order of power.
-// monsteres here come from genera: n, z, and V
+// monsteres here come from genera: n, z, V and W
 // - Vampire mages are excluded because they worship scholarly Kiku
 // - M genus is all Kiku's domain
 // - Curse *, putrid mouths, and bloated husks left out as they might
@@ -978,31 +978,33 @@ static monster_type _yred_servants[] =
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
-#define MAX_YRED_SERVANT_THRESHOLD ARRAYSZ(_yred_servants)
+#define MAX_YRED_SERVANT_THRESHOLD (int) ARRAYSZ(_yred_servants)
 
 bool yred_random_servant(unsigned int pow, bool force_hostile)
 {
-    int threshold;
+    int top_threshold;
 
     if (force_hostile)
     {
         // This implies wrath - scale the threshold with XL.
-        threshold =
+        top_threshold =
             MIN_YRED_SERVANT_THRESHOLD
             + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
-              * you.experience_level / 27;
+              * you.experience_level / 18;
     }
     else
     {
-        threshold =
+        top_threshold =
             MIN_YRED_SERVANT_THRESHOLD
             + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
-              * pow / 27;
+              * pow / 18;
     }
 
     // Skip some of the weakest servants, once the threshold is high.
-    const unsigned int servant = random_range(max(threshold / 2 - 2, 0),
-                                              threshold);
+    const int bot_threshold = top_threshold / 2 + 2;
+    top_threshold = min(top_threshold, MAX_YRED_SERVANT_THRESHOLD);
+
+    const unsigned int servant = random_range(bot_threshold, top_threshold);
 
     monster_type mon_type = _yred_servants[servant];
 

@@ -1036,22 +1036,23 @@ static void _calculate_yred_piety()
     set_piety(min(200, 15 + soul_harvest));
 }
 
-static void _give_one_yred_bonus_zombie()
+static bool _give_one_yred_bonus_zombie()
 {
     mgen_data mg(MONS_ZOMBIE, BEH_FRIENDLY, you.pos(), MHITYOU);
     mg.set_summoned(&you, 0, 0, GOD_YREDELEMNUL);
-    create_monster(mg);
+    return create_monster(mg);
 }
 
-// Always place at least one zombie when called, so that
+// Always try to place at least one zombie when called, so that
 // monks get a little extra at an ecumenical altar.
 void give_yred_bonus_zombies(int stars)
 {
+    bool placed = false;
     do
     {
-        _give_one_yred_bonus_zombie();
+        placed = _give_one_yred_bonus_zombie();
         _calculate_yred_piety();
-    } while (you.piety < piety_breakpoint(stars - 1));
+    } while (placed && you.piety < piety_breakpoint(stars - 1));
 }
 
 bool yred_reap_chance()

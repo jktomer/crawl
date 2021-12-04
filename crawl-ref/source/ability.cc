@@ -287,6 +287,11 @@ struct ability_def
             return cost + mp_cost;
         return cost;
     }
+
+    int get_souls_cost() const
+    {
+        return flags & abflag::souls ? mp_cost / 2 : 0;
+    }
 };
 
 static int _lookup_ability_slot(ability_type abil);
@@ -1516,8 +1521,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return false;
     }
 
-    if (testbits(abil.flags, abflag::souls)
-        && !pay_yred_souls(abil.get_mp_cost() / 2, true))
+    if (!pay_yred_souls(abil.get_souls_cost(), true))
     {
         if (!quiet)
             mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
@@ -2721,13 +2725,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     case ABIL_YRED_DARK_BARGAIN:
     {
         fail_check();
-        const int soul_cost = abil.get_mp_cost() / 2;
-
-        if (!pay_yred_souls(soul_cost, true))
-        {
-            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
-            return spret::abort;
-        }
 
         // XXX: call rude_summon_prompt()?
         // a reason not to: the only rude summon things that damage
@@ -2735,7 +2732,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         // hostile already, rendering the player unable to use this ability.
         fail_check();
 
-        pay_yred_souls(soul_cost);
         if (yred_random_servant(you.skill_rdiv(SK_INVOCATIONS)))
             simple_god_message(" sends a servant to aid you.");
 
@@ -2746,13 +2742,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
     {
         int damage = 0;
         const int pow = you.skill_rdiv(SK_INVOCATIONS);
-        const int soul_cost = abil.get_mp_cost() / 2;
-
-        if (!pay_yred_souls(soul_cost, true))
-        {
-            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
-            return spret::abort;
-        }
 
         if (trace_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you) == spret::abort
             && !yesno("There are no drainable targets visible. Drain Life "
@@ -2764,7 +2753,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
 
         fail_check();
 
-        pay_yred_souls(soul_cost);
         fire_los_attack_spell(SPELL_DRAIN_LIFE, pow, &you, false, &damage);
 
         if (damage > 0)
@@ -2783,13 +2771,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
         args.needs_path = false;
-        const int soul_cost = abil.get_mp_cost() / 2;
-
-        if (!pay_yred_souls(soul_cost, true))
-        {
-            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
-            return spret::abort;
-        }
 
         if (!spell_direction(*target, beam, &args))
             return spret::abort;
@@ -2825,7 +2806,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target)
         }
         fail_check();
 
-        pay_yred_souls(soul_cost);
         const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 2) + 4;
         mons->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, &you,
                                    duration * BASELINE_DELAY));
@@ -3565,6 +3545,9 @@ static void _pay_ability_costs(const ability_def& abil)
 
     if (piety_cost)
         lose_piety(piety_cost);
+
+    if (abil.get_souls_cost())
+        pay_yred_souls(abil.get_souls_cost());
 }
 
 int choose_ability_menu(const vector<talent>& talents)

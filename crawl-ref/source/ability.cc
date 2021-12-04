@@ -874,7 +874,7 @@ const string make_cost_description(ability_type ability)
     }
 
     if (abil.flags & abflag::souls)
-        ret += make_stringf(", %d Souls", abil.mp_cost / 2);
+        ret += make_stringf(", %d Souls", abil.get_souls_cost());
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())

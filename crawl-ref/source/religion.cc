@@ -1001,8 +1001,8 @@ bool yred_random_servant(unsigned int pow, bool force_hostile)
     }
 
     // Skip some of the weakest servants, once the threshold is high.
-    const int bot_threshold = top_threshold / 2 + 2;
-    top_threshold = min(top_threshold, MAX_YRED_SERVANT_THRESHOLD);
+    const int bot_threshold = top_threshold <= 4 ? 0 : top_threshold / 2 + 2;
+    top_threshold = min(top_threshold, MAX_YRED_SERVANT_THRESHOLD - 1);
 
     const unsigned int servant = random_range(bot_threshold, top_threshold);
 

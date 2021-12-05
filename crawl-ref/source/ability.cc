@@ -1524,7 +1524,10 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     if (!pay_yred_souls(abil.get_souls_cost(), true))
     {
         if (!quiet)
-            mprf("You lack souls to offer %s!", god_name(you.religion).c_str());
+        {
+            mprf("You lack nearby souls to offer %s!",
+                 god_name(you.religion).c_str());
+        }
         return false;
     }
 

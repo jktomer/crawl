@@ -82,6 +82,7 @@
 #define PIETY_HYSTERESIS_LIMIT 1
 
 #define MIN_IGNIS_PIETY_KEY "min_ignis_piety"
+#define YRED_SEEN_ZOMBIE_KEY "yred_seen_zombie"
 
 static weapon_type _hepliaklqana_weapon_type(monster_type mc, int HD);
 static brand_type _hepliaklqana_weapon_brand(monster_type mc, int HD);
@@ -1038,9 +1039,24 @@ static void _calculate_yred_piety()
 
     int soul_harvest = 0;
 
-    for (monster_near_iterator mi(you.pos(), LOS_DEFAULT); mi; ++mi)
-        if (is_yred_undead_slave(**mi) && !mi->is_summoned())
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (!is_yred_undead_slave(**mi) || mi->is_summoned())
+            continue;
+
+
+        // To smooth out yred piety fluctuations count zombies for piety
+        // as lont as they've been recently seen
+        if (you.can_see(**mi))
+            mi->props[YRED_SEEN_ZOMBIE_KEY] = you.elapsed_time;
+
+        if (mi->props.exists(YRED_SEEN_ZOMBIE_KEY) &&
+            mi->props[YRED_SEEN_ZOMBIE_KEY].get_int()
+            > you.elapsed_time - 5 * BASELINE_DELAY)
+        {
             soul_harvest += 2 * mi->get_hit_dice() + 2;
+        }
+    }
 
     set_piety(min(200, 15 + soul_harvest));
 }
